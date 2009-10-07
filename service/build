@@ -1,0 +1,1 @@
+ ocamlfind ocamlopt -linkpkg -package extlib -o a a.ml
