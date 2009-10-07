@@ -1,11 +1,11 @@
 #!/usr/bin/perl 
 
 use Data::Dumper;
-use lib "./";
-use RDFStore;
+use lib "../clients/perl";
+use ASPOTStore;
 
 
-my $store = new RDFStore('a','b','c','d');
+my $store = new ASPOTStore('a','b','c','d');
 my $obj = $store->newSubject();
 my $add = $store->newSubject();
 $add->line1->value("home");

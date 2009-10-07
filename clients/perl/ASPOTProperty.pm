@@ -1,8 +1,10 @@
 #!/usr/bin/perl 
-package RDFProperty;
+package ASPOTProperty;
 use Data::Dumper;
 use Scalar::Util;
-use RDFValue;
+use ASPOTStore;
+use ASPOTSubject;
+use ASPOTValue;
 
 sub new {
   my ($class, $subject, $predicate) = @_;
@@ -30,7 +32,7 @@ sub _values {
     my $subject = $self->{_subject};
     my $predicate = $self->{_predicate};
     my $uuids = $subject->statement_by_predicate($predicate);
-    my @values = map { new RDFValue($self,$_) } @$uuids;
+    my @values = map { new ASPOTValue($self,$_) } @$uuids;
     return \@values;
 }
 sub _value {
@@ -53,8 +55,8 @@ sub _get_object {
 
 sub add { 
 	my ($self, $object) = @_;
-    my $uuid = RDFStore->uuid();
-    my $new = new RDFValue($self,$uuid);
+    my $uuid = ASPOTStore->uuid();
+    my $new = new ASPOTValue($self,$uuid);
     if ($object) {
       $new->value($object);
     }
@@ -68,6 +70,7 @@ sub foreach {
 }
 
 
+sub DESTROY { }
 sub AUTOLOAD {
   my($self) = @_;
   my $name = $AUTOLOAD;
@@ -79,12 +82,11 @@ sub AUTOLOAD {
     return $values->[0]->$name;
   }
   else {
-  my $uuid = RDFStore->uuid();
-  my $subject = RDFStore->uuid();
+  my $uuid = ASPOTStore->uuid();
+  my $subject = ASPOTStore->uuid();
   my $new = $self->_value($uuid,$subject);
   return $self->$name;
   }
 }
-
 
 1;

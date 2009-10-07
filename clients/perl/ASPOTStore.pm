@@ -1,10 +1,8 @@
 #!/usr/bin/perl 
 
-package RDFStore;
 use Data::Dumper;
-use RDFSubject;
-use RDFProperty;
-use RDFValue;
+use ASPOTSubject;
+package ASPOTStore;
 
 sub new {
   my $class = shift;
@@ -57,8 +55,8 @@ sub uuid {
 }
 sub newSubject {
   my ($self,$uuid) = @_;
-  $uuid = RDFStore->uuid() if !$uuid;
-  my $subject = new RDFSubject($self, $uuid,[]);
+  $uuid = ASPOTStore->uuid() if !$uuid;
+  my $subject = new ASPOTSubject($self, $uuid,[]);
   $self->{_subjects}->{$uuid} = $subject;
   return $subject;
 }
@@ -84,36 +82,3 @@ sub save {
 
 }
 1;
-
-sub _test_request {
-  my ($self,$params) =  @_;
-  if ($params->{query}) {
-  }
-  elsif ($load = $params->{load}) {
-    my @uuids = grep {$_->{subject} eq $load} keys %{$self->{_db}};
-    my @statements = map {
-      {
-        uuid=>$_,
-        subject=>$_->{subject},
-        predicate=>$_->{predicate},
-        object=>$_->{object}
-      }
-    } @uuids;
-    return \@statements
-  }
-  elsif ($uuid = $params->{statement}) {
-    if ($subject = $paramas->{subject}) {
-      my $predicate = $paramas->{predicate};
-      my $object = $paramas->{object};
-      $self->{_db}->{$uuid} = {
-        subject=>$subject,
-        predicate=>$predicate,
-        object=>$object,
-      };
-    }
-    else {
-      $self->{_db}->{$uuid} = undef;
-    }
-  }
-  return;
-}

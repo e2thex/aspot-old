@@ -1,9 +1,11 @@
 #!/usr/bin/perl 
 
+use Data::Dumper;
 use Scalar::Util;
-use RDFStore;
-use RDFProperty;
-package RDFSubject;
+use ASPOTStore;
+use ASPOTProperty;
+use ASPOTValue;
+package ASPOTSubject;
 our $AUTOLOAD;
 
 sub new
@@ -102,13 +104,16 @@ sub value {
 #    return keys %{ $self->{_properties} }
 #}
 
+sub DESTROY { }
 sub AUTOLOAD {
     my($self) = @_;
 	my $name = $AUTOLOAD;
 	$name =~ s/.*://;   # strip fully-qualified portion
-   # dpm($self->{_store});<STDIN>;
-    my $property = new RDFProperty($self,$name);
+    my $property = new ASPOTProperty($self,$name);
     return $property;
 }    
-1;
 
+
+
+
+1;

@@ -1,7 +1,14 @@
+
 #!/usr/bin/perl 
 
+use Data::Dumper;
 use Scalar::Util;
-package RDFValue;
+use ASPOTStore;
+use ASPOTProperty;
+use ASPOTSubject;
+
+
+package ASPOTValue;
 our $AUTOLOAD;
 
 sub new {
@@ -16,8 +23,8 @@ sub new {
 }
 sub value {
   my($self, $value) = @_;
-  #if view value is a RDFSubject get the uuid as the value
-  if (ref $value eq RDFSubject) {
+  #if view value is a ASPOTRDFSubject get the uuid as the value
+  if (ref $value eq ASPOTSubject) {
     $value = $value->value;
   }
   return $self->{_property}->_value($self->{_statement_uuid},$value);
@@ -28,14 +35,16 @@ sub remove {
 
 
 }
-
+sub DESTROY { }
 sub AUTOLOAD {
   my($self) = @_;
   my $name = $AUTOLOAD;
   $name =~ s/.*://;   # strip fully-qualified portion
-  print Dumper($self->{_property});<STDIN>;
-  #my $subject = $self->{_property}->_get_object($self->{_statement_uuid});
-  print Dumper($subject);<STDIN>;
+  my $subject = $self->{_property}->_get_object($self->{_statement_uuid});
   return $subject->$name;
 }
+
+
+
 1;
+
